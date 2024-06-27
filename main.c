@@ -31,9 +31,6 @@ int main(void)
 		if(strncmp(cmd, "a\n", 2) == 0) {	/* append command */
 			editing_mode = INPUT_MODE;
 			append_command();
-			for(int i = 0; i < text_buffer_position; i++) {
-				printf("%c", text_buffer[i]);
-			}
 			editing_mode = COMMAND_MODE;
 		}
 		else if(strncmp(cmd, "w ", 2) == 0)	/* write command */
@@ -69,10 +66,19 @@ int main(void)
 			/* open the file in the present working directory */
 			int fd = open(fname, O_RDWR, 0644);
 			if(fd != -1) {
-				printf("%d\n", read(fd, text_buffer, TEXT_BUFFER_MAX_LENGTH));
+				/* update the text buffer position */
+				text_buffer_position = read(fd, text_buffer, TEXT_BUFFER_MAX_LENGTH);
+
+				printf("%d\n", text_buffer_position);
 			}
 
 			close(fd);
+		}
+		else if(strncmp(cmd, ",p\n", 3) == 0) {		/* print command */
+			/* print the text buffer */
+			for(int i = 0; i < text_buffer_position; i++) {
+				printf("%c", text_buffer[i]);
+			}
 		}
 	} while(strncmp(cmd, "q\n", 2) != 0);
 
