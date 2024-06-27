@@ -15,6 +15,7 @@ Please [check](https://github.com/robstat7/sce/releases/tag/sce-0.01) the versio
 - `e file` (edit file command): open a file named "file" present in the present working directory for editing. The file is read into the Sataguru text buffer.
 - `,p` (print command): print the text buffer.
 - `w file` (write to file command): write the text buffer to the file specified by "file" name in the present working directory. The file can either be a new or existing file.
+- `q` (quit): quit the code editor program.
 
 ## Input Mode commands:
 - `a` (append command): append line(s) to the text buffer. A line input is done by pressing Enter. After appending code line(s), press . (dot) followed by Enter to exit input mode (it is the . (dot) sub-command).
