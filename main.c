@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <string.h>
@@ -6,14 +7,14 @@
 #define COMMAND_MODE					0x0
 #define INPUT_MODE					0x1
 
-#define TEXT_BUFFER_MAX_LENGTH				1000
-#define INPUT_LINE_MAX_LENGTH				81
+#define TEXT_BUFFER_MAX_LENGTH				840000		/* support for 4k lines */
+#define INPUT_LINE_MAX_LENGTH				210	/* maximum no. of characters in a line */
 
 /* the default mode when sce runs for the first time */
 int editing_mode = COMMAND_MODE;
 
 /* initialize the text buffer */
-char text_buffer[TEXT_BUFFER_MAX_LENGTH];
+char *text_buffer = NULL;
 
 /* declare and initialize the text buffer position variable */
 int text_buffer_position = 0;
@@ -24,6 +25,13 @@ void append_to_text_buffer(char *input_line);
 int main(void)
 {
 	char cmd[100];
+
+	text_buffer = (char *) malloc(TEXT_BUFFER_MAX_LENGTH);
+
+	if(text_buffer == NULL) {
+		printf("error: couldn't allocate the text buffer!\n");
+		return 1;
+	}
 
 	do {
 		fgets(cmd, 100, stdin);
@@ -81,6 +89,8 @@ int main(void)
 			}
 		}
 	} while(strncmp(cmd, "q\n", 2) != 0);
+
+	free(text_buffer);
 
 	return 0;
 }
