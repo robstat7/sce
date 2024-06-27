@@ -50,7 +50,7 @@ int main(void)
 			/* create or open the file in the present working directory */
 			int fd = open(fname, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			if(fd != -1) {
-				printf("%d", write(fd, text_buffer, text_buffer_position));
+				printf("%d\n", write(fd, text_buffer, text_buffer_position));
 			}
 
 			close(fd);
