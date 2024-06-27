@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include <string.h>
 
 #define COMMAND_MODE					0x0
@@ -24,11 +26,9 @@ int main(void)
 	char cmd[100];
 
 	do {
-		scanf("%s", cmd);
+		fgets(cmd, 100, stdin);
 
-		getchar();		/* flush the stdin */
-
-		if(strcmp(cmd, "a") == 0) {	/* append command */
+		if(strncmp(cmd, "a\n", 2) == 0) {	/* append command */
 			editing_mode = INPUT_MODE;
 			append_command();
 			for(int i = 0; i < text_buffer_position; i++) {
@@ -36,7 +36,27 @@ int main(void)
 			}
 			editing_mode = COMMAND_MODE;
 		}
-	} while(strcmp(cmd, "q") != 0);
+		else if(strncmp(cmd, "w ", 2) == 0)	/* write command */
+		{
+			char fname[50];
+
+			/* get the filename */
+			int cmd_len = strlen(cmd) - 1;		/* subtract 1 to neglect the newline character */
+
+			for(int i = 2, j = 0; (i < cmd_len && j < 50); i++, j++) {
+				fname[j] = cmd[i];
+			}
+
+			/* create or open the file in the present working directory */
+			int fd = open(fname, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			if(fd != -1) {
+				printf("%d", write(fd, text_buffer, text_buffer_position));
+			}
+
+			close(fd);
+
+		}
+	} while(strncmp(cmd, "q\n", 2) != 0);
 
 	return 0;
 }
@@ -45,11 +65,15 @@ void append_command(void)
 {
 	char input_line[INPUT_LINE_MAX_LENGTH];
 
-	do {
+	while(1) {
 		fgets(input_line, INPUT_LINE_MAX_LENGTH, stdin);
 
+		if(strncmp(input_line, ".\n", 2) == 0) {
+			break;
+		}
+
 		append_to_text_buffer(input_line);
-	} while(strncmp(input_line, ".", 1) != 0);
+	}
 
 }
 
@@ -61,6 +85,12 @@ void append_to_text_buffer(char *input_line)
 	int input_line_len = strlen(input_line) + 1;
 
 	for(i = text_buffer_position, j = 0; (i < TEXT_BUFFER_MAX_LENGTH && j < input_line_len); i++, j++) {
+		/* skip appending the null character */
+		if(input_line[j] == '\0') {
+			i--;
+			continue;
+		}
+
 		text_buffer[i] = input_line[j];
 	}
 
