@@ -56,6 +56,24 @@ int main(void)
 			close(fd);
 
 		}
+		else if(strncmp(cmd, "e ", 2) == 0) {		/* edit file command */
+			char fname[50];
+
+			/* get the filename */
+			int cmd_len = strlen(cmd) - 1;		/* subtract 1 to neglect the newline character */
+
+			for(int i = 2, j = 0; (i < cmd_len && j < 50); i++, j++) {
+				fname[j] = cmd[i];
+			}
+
+			/* open the file in the present working directory */
+			int fd = open(fname, O_RDWR, 0644);
+			if(fd != -1) {
+				printf("%d\n", read(fd, text_buffer, TEXT_BUFFER_MAX_LENGTH));
+			}
+
+			close(fd);
+		}
 	} while(strncmp(cmd, "q\n", 2) != 0);
 
 	return 0;
