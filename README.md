@@ -12,7 +12,7 @@ Please [check](https://github.com/robstat7/sce/releases/tag/sce-0.01) the **vers
 
 ## Perks
 
-It is both peaceful (read: peace of mind) and productive to use the Sataguru Code Editor than `vi` or `vim` and other full-screen (both command-line and GUI-based) editors. It is more focused and you save a lot of time that you waste on the full-screen editors. It is more focused in the sense that you need a little planning and organization before writing code.
+It is both peaceful (read: peace of mind) and productive to use the Sataguru Code Editor than `vi` or `vim` and other full-screen (both command-line and GUI-based) editors. It is more focused and you save a lot of time that you waste on the full-screen editors. It is more focused in the sense that you need a little planning and organization before writing code and you write code line-by-line.
 
 - Peace of mind
 - Productive
