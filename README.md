@@ -14,9 +14,10 @@ Please [check](https://github.com/robstat7/sce/releases/tag/sce-0.01) the **vers
 
 It is both peaceful and productive to use the Sataguru Code Editor than `vi` or `vim` and other full-screen (both command-line and GUI-based) editors. It is more focused and you save a lot of time that you waste on the full-screen editors. It is more focused in the sense that you need a little planning and organization before writing code and you write code line-by-line.
 
+- Line-by-line editing
 - Gives peace of mind
 - Increases productivity
-- More focused editor
+- More focused editor than other full-screen editors
 - Can be used for text editing as well
 
 ## Editing Modes commands
