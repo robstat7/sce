@@ -19,12 +19,26 @@ char *text_buffer = NULL;
 /* declare and initialize the text buffer position variable */
 int text_buffer_position = 0;
 
+struct line_struct {
+	int addresses;
+	int curr_address;		/* current address */
+};
+
+struct line_struct line;
+
+
+
 void append_command(void);
 void append_to_text_buffer(char *input_line);
+void print_line(char addr);
 
 int main(void)
 {
 	char cmd[100];
+
+
+	line.addresses = 0;			/* default: no line */
+	line.curr_address = 0;			/* default is 0 */
 
 	text_buffer = (char *) malloc(TEXT_BUFFER_MAX_LENGTH);
 
@@ -35,6 +49,8 @@ int main(void)
 
 	do {
 		fgets(cmd, 100, stdin);
+
+		int cmd_len = strlen(cmd);
 
 		if(strncmp(cmd, "a\n", 2) == 0) {	/* append command */
 			editing_mode = INPUT_MODE;
@@ -81,6 +97,8 @@ int main(void)
 			}
 
 			close(fd);
+		} else if(cmd[cmd_len - 2] == 'p' && cmd[cmd_len - 1] == '\n') {		/* print command */
+			print_line(cmd[0]);
 		}
 		else if(strncmp(cmd, ",p\n", 3) == 0) {		/* print command */
 			/* print the text buffer */
@@ -129,4 +147,39 @@ void append_to_text_buffer(char *input_line)
 	}
 
 	text_buffer_position = i;
+
+	line.addresses++;
+}
+
+/* print a line specified by the line address */
+void print_line(char addr) {
+	int line_addr = addr - '0';
+
+	printf("%d\n", line_addr);
+
+	if(line_addr <= line.addresses) {
+		int num_newline_chars = line_addr - 1;
+		int found_newline_chars = 0, pos = 0;
+
+		for(int i = 0; i < TEXT_BUFFER_MAX_LENGTH; i++) {
+			if(text_buffer[i] == '\n') {
+				found_newline_chars++;
+
+				if(found_newline_chars == num_newline_chars) {
+					pos = i + 1;
+					break;
+				}
+			}
+		}
+
+		/* print the line */
+		while(text_buffer[pos] != '\n') {
+			printf("%c", text_buffer[pos++]);
+		}
+
+		printf("\n");
+
+		/* update the current line address */
+		line.curr_address = line_addr;
+	}
 }
