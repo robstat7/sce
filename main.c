@@ -28,6 +28,7 @@ struct line_struct line;
 
 
 
+void print(int print_arg);
 void append_command(void);
 void append_to_text_buffer(char *input_line);
 void print_line(char addr);
@@ -155,10 +156,13 @@ void append_to_text_buffer(char *input_line)
 void print_line(char addr) {
 	int line_addr = addr - '0';
 
-	printf("%d\n", line_addr);
 
-	if(line_addr <= line.addresses) {
+	if(addr == ',') {
+		print(-1);	/* print to the end of buffer */
+	}
 		int num_newline_chars = line_addr - 1;
+
+	if(line_addr > 0 && line_addr <= line.addresses) {
 		int found_newline_chars = 0, pos = 0;
 
 		for(int i = 0; i < TEXT_BUFFER_MAX_LENGTH; i++) {
@@ -181,5 +185,18 @@ void print_line(char addr) {
 
 		/* update the current line address */
 		line.curr_address = line_addr;
+	}
+}
+
+void print(int print_arg)
+{
+	int pos = 0, end = 0;
+
+	if(print_arg == -1) {
+		end = text_buffer_position;
+	}
+
+	for(int i = pos; i < end; i++) {
+		printf("%c", text_buffer[i]);
 	}
 }
